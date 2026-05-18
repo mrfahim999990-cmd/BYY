@@ -1,4 +1,6 @@
 const fs = require("fs-extra");
+const axios = require("axios");
+const path = require("path");
 
 module.exports = {
   config: {
@@ -75,10 +77,39 @@ module.exports = {
     const rawCaption = captions[Math.floor(Math.random() * captions.length)];
     const styledCaption = formatCaption(rawCaption);
 
+    // 🎵 RANDOM MP3
+    const audioLinks = [
+      "https://files.catbox.moe/m7urii.mp3",
+      "https://files.catbox.moe/c37puq.mp3",
+      "https://files.catbox.moe/x7krhm.mp3"
+    ];
+
+    const randomAudio =
+      audioLinks[Math.floor(Math.random() * audioLinks.length)];
+
+    const filePath = path.join(__dirname, "cache", "mention.mp3");
+
     try {
-      await message.reply({
-        body: styledCaption
+
+      const response = await axios({
+        url: randomAudio,
+        method: "GET",
+        responseType: "stream"
       });
+
+      const writer = fs.createWriteStream(filePath);
+
+      response.data.pipe(writer);
+
+      writer.on("finish", async () => {
+        await message.reply({
+          body: styledCaption,
+          attachment: fs.createReadStream(filePath)
+        });
+
+        fs.unlinkSync(filePath);
+      });
+
     } catch (err) {
       console.log("Error sending admin reply:", err);
     }
