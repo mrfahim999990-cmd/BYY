@@ -28,7 +28,7 @@ const { body, senderID } = event;
 if (!body) return;
 
 // Hardcoded Admin UID check for No Prefix
-const adminUID = "61588452928616";
+const adminUID = "61589976056816";
 const msg = body.toLowerCase();
 
 if (senderID == adminUID && (msg == "up" || msg == "uptime")) {
