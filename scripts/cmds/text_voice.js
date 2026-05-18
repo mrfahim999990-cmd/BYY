@@ -59,7 +59,8 @@ module.exports = {
       const cacheDir = path.join(__dirname, "cache", "voices");
       fs.ensureDirSync(cacheDir);
 
-      const fileName = `${Buffer.from(input).toString("hex")}.mp3`;
+      const ext = path.extname(audioUrl);
+      const fileName = `${Buffer.from(input).toString("hex")}${ext}`;
       const filePath = path.join(cacheDir, fileName);
 
       try {
